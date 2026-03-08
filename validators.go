@@ -4,7 +4,7 @@
 // when using the domainValidator tag.
 // Objective: Keep validation logic in one place and reusable by
 // domain_validator without exporting these helpers.
-package domain
+package ddgo
 
 import (
 	"reflect"

@@ -4,7 +4,7 @@
 // that can be mapped to HTTP status codes or other responses.
 // Objective: Make it easier to detect and handle domain errors (e.g. not
 // found, validation, dependency failure) without string matching.
-package domain
+package ddgo
 
 import "fmt"
 

@@ -4,7 +4,7 @@
 // entities with identity, aggregate roots, and standardized errors).
 // Objective: Enable consistent validation and error handling across
 // the application without depending on infrastructure details.
-package domain
+package ddgo
 
 import (
 	"fmt"

@@ -4,7 +4,7 @@
 // events to dispatch after persistence.
 // Objective: Support event sourcing and auditing. See:
 // https://martinfowler.com/bliki/DDD_Aggregate.html
-package domain
+package ddgo
 
 import (
 	"fmt"

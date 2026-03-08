@@ -1,4 +1,4 @@
-package domain
+package ddgo
 
 // Entity is the base type for domain entities with a unique identifier.
 //

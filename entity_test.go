@@ -1,4 +1,4 @@
-package domain_test
+package ddgo_test
 
 import (
 	"testing"
