@@ -39,6 +39,18 @@ type (
 	}
 )
 
+// NewValidationError creates an error for validation failures.
+//
+// Parameters: message — human-readable description.
+// Returns: *ValidationError implementing error.
+func NewValidationError(message string) *ValidationError {
+	return &ValidationError{
+		abstractError{
+			message: message,
+		},
+	}
+}
+
 // NewDependencyError creates an error for dependency failures.
 //
 // Parameters: message — human-readable description.
