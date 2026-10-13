@@ -43,6 +43,7 @@ type (
 //
 // Parameters: message — human-readable description.
 // Returns: *ValidationError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewValidationError(message string) *ValidationError {
 	return &ValidationError{
 		abstractError{
@@ -55,6 +56,7 @@ func NewValidationError(message string) *ValidationError {
 //
 // Parameters: message — human-readable description.
 // Returns: *DependencyError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewDependencyError(message string) *DependencyError {
 	return &DependencyError{
 		abstractError{
@@ -67,6 +69,7 @@ func NewDependencyError(message string) *DependencyError {
 //
 // Parameters: message — human-readable description.
 // Returns: *NotFoundError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewNotFoundError(message string) *NotFoundError {
 	return &NotFoundError{
 		abstractError{
@@ -79,6 +82,7 @@ func NewNotFoundError(message string) *NotFoundError {
 //
 // Parameters: message — human-readable description.
 // Returns: *InternalError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewInternalError(message string) *InternalError {
 	return &InternalError{
 		abstractError{
@@ -91,6 +95,7 @@ func NewInternalError(message string) *InternalError {
 //
 // Parameters: message — human-readable description.
 // Returns: *AlreadyExistsError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewAlreadyExistsError(message string) *AlreadyExistsError {
 	return &AlreadyExistsError{
 		abstractError{
@@ -103,6 +108,7 @@ func NewAlreadyExistsError(message string) *AlreadyExistsError {
 //
 // Parameters: message — human-readable description.
 // Returns: *InvalidDataError implementing error.
+// Deprecated: use "ddgo/err" instead
 func NewInvalidDataError(message string) *InvalidDataError {
 	return &InvalidDataError{
 		abstractError{
@@ -125,6 +131,7 @@ func (e *abstractError) buildMessage(message string, previous error) string {
 // Parameters: previous — the underlying error (may be nil).
 // Returns: the receiver so callers can chain.
 // Behavior: Error() will include "; previous: <previous.Error()>" when non-nil.
+// Deprecated: use "ddgo/err" instead
 func (e *abstractError) SetPreviousError(previous error) *abstractError {
 	e.previous = previous
 	return e
@@ -133,6 +140,7 @@ func (e *abstractError) SetPreviousError(previous error) *abstractError {
 // Error implements the error interface.
 //
 // Returns: the error message; if a previous error was set, it is appended.
+// Deprecated: use "ddgo/err" instead
 func (e *abstractError) Error() string {
 	return e.buildMessage(e.message, e.previous)
 }
