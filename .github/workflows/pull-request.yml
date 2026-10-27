@@ -10,7 +10,7 @@ jobs:
     name: Unit tests and coverage
     runs-on: ubuntu-latest
     env:
-      COVERAGE_THRESHOLD: 90
+      COVERAGE_THRESHOLD: 100
     steps:
       - name: Check out repository code
         uses: actions/checkout@v6
