@@ -1,9 +1,9 @@
-name: Merge master
-run-name: ${{ github.actor }} 🚀 merging into master
+name: Merge main
+run-name: ${{ github.actor }} 🚀 merging into main
 
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 permissions:
   contents: write
