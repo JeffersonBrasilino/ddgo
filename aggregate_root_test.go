@@ -8,12 +8,15 @@ import (
 )
 
 type fakeEvent struct{}
+
 func (f *fakeEvent) Payload() any {
 	return "ok"
 }
+
 func (f *fakeEvent) OcurredOn() time.Time {
 	return time.Now()
 }
+
 func (f *fakeEvent) Uuid() string {
 	return "uuid"
 }
@@ -31,7 +34,7 @@ func TestAggregateRoot_AddDomainEvent(t *testing.T) {
 		t.Parallel()
 		ar := domain.NewAggregateRoot("mock")
 		got := ar.AddDomainEvent(&fakeEvent{})
-		if got != nil{
+		if got != nil {
 			t.Errorf("AddDomainEvent should return a nil error, got: %v", got)
 		}
 	})
@@ -40,59 +43,59 @@ func TestAggregateRoot_AddDomainEvent(t *testing.T) {
 		t.Parallel()
 		ar := domain.NewAggregateRoot("mock")
 		got := ar.AddDomainEvent(nil)
-		if got == nil{
+		if got == nil {
 			t.Error("AddDomainEvent should return a non-nil error")
 		}
 	})
 }
 
-func TestAggregateRoot_DomainEvents(t *testing.T){
+func TestAggregateRoot_DomainEvents(t *testing.T) {
 	t.Run("Should return domain event list", func(t *testing.T) {
 		ar := domain.NewAggregateRoot("mock")
 		ar.AddDomainEvent(&fakeEvent{})
 		got := ar.DomainEvents()
-		
-		if got == nil{
+
+		if got == nil {
 			t.Error("DomainEvents should return a non-nil list")
 		}
 
-		if len(got) != 1{
+		if len(got) != 1 {
 			t.Error("DomainEvents should return a exactly 1 event added")
 		}
 	})
 }
 
-func TestAggregateRoot_RemoveDomainEvent(t *testing.T){
+func TestAggregateRoot_RemoveDomainEvent(t *testing.T) {
 	t.Run("Should return domain event list", func(t *testing.T) {
 		t.Parallel()
 		ar := domain.NewAggregateRoot("mock")
-		ev:= &fakeEvent{}
+		ev := &fakeEvent{}
 		ar.AddDomainEvent(ev)
 		ar.RemoveDomainEvent(ev.Uuid())
-		
-		if ar.DomainEvents() == nil{
+
+		if ar.DomainEvents() == nil {
 			t.Error("DomainEvents should return a non-nil list")
 		}
 
-		if len(ar.DomainEvents()) != 0{
+		if len(ar.DomainEvents()) != 0 {
 			t.Error("DomainEvents should return a exactly 0 event added")
 		}
 	})
 }
 
-func TestAggregateRoot_ClearEvents(t *testing.T){
+func TestAggregateRoot_ClearEvents(t *testing.T) {
 	t.Run("Should return domain event list", func(t *testing.T) {
 		t.Parallel()
 		ar := domain.NewAggregateRoot("mock")
-		ev:= &fakeEvent{}
+		ev := &fakeEvent{}
 		ar.AddDomainEvent(ev)
 		ar.ClearEvents()
-		
-		if ar.DomainEvents() == nil{
+
+		if ar.DomainEvents() == nil {
 			t.Error("DomainEvents should return a non-nil list")
 		}
 
-		if len(ar.DomainEvents()) != 0{
+		if len(ar.DomainEvents()) != 0 {
 			t.Error("DomainEvents should return a exactly 0 event added")
 		}
 	})

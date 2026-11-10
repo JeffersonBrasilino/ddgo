@@ -1,9 +1,15 @@
-// Package domain provides domain validation, entities, and error types.
+// Legacy domain validation, superseded by package
+// github.com/jeffersonbrasilino/ddgo/domain.
 //
 // Intent: Centralize domain building blocks (validation by struct tags,
 // entities with identity, aggregate roots, and standardized errors).
 // Objective: Enable consistent validation and error handling across
 // the application without depending on infrastructure details.
+//
+// Every exported identifier in this file is deprecated and kept only for backward
+// compatibility. New code must use the domain package
+// (github.com/jeffersonbrasilino/ddgo/domain).
+
 package ddgo
 
 import (
@@ -63,6 +69,9 @@ type parentFieldData struct {
 // definitions by type to avoid repeated reflection work.
 //
 // Returns: pointer to `domainValidator` singleton.
+//
+// Deprecated: Use domain.ValidatorInstance from
+// github.com/jeffersonbrasilino/ddgo/domain instead.
 func ValidatorInstance() *domainValidator {
 	return validatorInstance
 }
@@ -70,6 +79,9 @@ func ValidatorInstance() *domainValidator {
 // ResetDomainValidatorForTest resets the package validator singleton. This
 // function is intended to be used in tests to clear cached schemas and return
 // the validator to a clean state.
+//
+// Deprecated: Use domain.ResetDomainValidatorForTest from
+// github.com/jeffersonbrasilino/ddgo/domain instead.
 func ResetDomainValidatorForTest() {
 	validatorInstance = &domainValidator{
 		cache: make(map[reflect.Type][]validationStep),
@@ -109,6 +121,9 @@ func ResetDomainValidatorForTest() {
 //	result, _ := ValidatorInstance().Validate(&dto)
 //	// result will contain validation failures for Name and Age.
 //	available validators: required, gte, lte, len
+//
+// Deprecated: Use the Validate method of domain.ValidatorInstance from
+// github.com/jeffersonbrasilino/ddgo/domain instead.
 func (d *domainValidator) Validate(data any) (map[string]validateResult, error) {
 	if data == nil {
 		return nil, nil
@@ -116,7 +131,6 @@ func (d *domainValidator) Validate(data any) (map[string]validateResult, error) 
 
 	values := reflect.Indirect(reflect.ValueOf(data))
 	validationSchema, err := d.getValidationSchema(data)
-
 	if err != nil {
 		return nil, err
 	}
@@ -172,14 +186,12 @@ func (d *domainValidator) getValidationSchema(data any) ([]validationStep, error
 	}
 
 	return schema, nil
-
 }
 
 func (d *domainValidator) makeValidationSchema(
 	data reflect.Value,
 	parentField *parentFieldData,
 ) ([]validationStep, error) {
-
 	schemaValue := data
 	fieldName := []string{}
 	dataKeys := []int{}
@@ -220,7 +232,6 @@ func (d *domainValidator) makeValidationSchema(
 				parentIndexPosition: currentPath,
 				parentFieldName:     fieldName,
 			})
-
 			if err != nil {
 				return nil, err
 			}

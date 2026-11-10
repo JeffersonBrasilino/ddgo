@@ -1,9 +1,15 @@
-// Validators used by the domain validator (tag-based validation).
+// Legacy validators used by the legacy domain validator (tag-based
+// validation), superseded by package github.com/jeffersonbrasilino/ddgo/domain.
 //
 // Intent: Provide required, gte, lte, and len checks for struct fields
 // when using the domainValidator tag.
 // Objective: Keep validation logic in one place and reusable by
 // domain_validator without exporting these helpers.
+//
+// Every identifier in this file is unexported and kept only for backward
+// compatibility of the legacy validator. New code must use the domain
+// package (github.com/jeffersonbrasilino/ddgo/domain).
+
 package ddgo
 
 import (

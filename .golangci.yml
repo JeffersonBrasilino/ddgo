@@ -1,0 +1,166 @@
+version: "2"
+# Baseado em samber/cc-skills-golang (golang-lint/assets/.golangci.yml),
+# ajustado para uma lib de domínio sem dependências externas.
+# Foco: bugs que quebram em produção (panic, nil, erros ignorados) > antipadrões > estilo.
+
+run:
+  timeout: 5m
+  tests: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters:
+  default: none
+  enable:
+    # --- correção: panics, nil, erros ignorados ---
+    - govet # copylocks, printf, nilness, unusedresult, loopclosure...
+    - staticcheck # APIs deprecated, bugs comuns, simplificações (inclui gosimple/stylecheck)
+    - unused # código morto
+    - ineffassign # atribuição nunca lida
+    - wastedassign # atribuição sobrescrita antes de ser lida
+    - errcheck # erros e type assertions não verificados
+    - errorlint # errors.Is/As e %w em vez de == e type assertion
+    - nilerr # retorna nil quando err != nil
+    - nilnil # retorna (nil, nil) — chamador não sabe se houve erro
+    - forcetypeassert # x.(T) sem comma-ok => panic
+    - exhaustive # switch em enum sem cobrir todos os casos
+    - durationcheck # time.Duration * time.Duration
+    - reassign # reatribuição de variáveis de outros pacotes (ex.: io.EOF = ...)
+    - copyloopvar # cópia desnecessária de variável de loop (Go 1.22+)
+    - predeclared # sombrear built-ins (len, error, new...)
+    - makezero # append em slice criado com make(len>0)
+    - gocheckcompilerdirectives # //go: directives inválidas
+
+    # --- contexto e recursos ---
+    - containedctx # context.Context guardado em struct
+    - contextcheck # função que não propaga o context recebido
+    - fatcontext # context aninhado em loop (vazamento)
+    - noctx # chamadas de rede sem context
+
+    # --- segurança ---
+    - gosec
+    - bidichk
+    - asciicheck
+
+    # --- antipadrões e idioms ---
+    - gocritic # range copiando struct grande, conversões inúteis, código redundante
+    - revive # convenções: exported docs, stutter, receiver names, error strings
+    - errname # ErrFoo / FooError
+    - sloglint # uso consistente de log/slog
+    - perfsprint # fmt.Sprintf/Errorf desnecessários
+    - unconvert # conversões de tipo desnecessárias
+    - usestdlibvars # constantes da stdlib em vez de literais
+    - modernize # padrões antigos substituíveis por features novas do Go
+    - intrange # for i := range n
+    - nolintlint # //nolint precisa citar o linter e justificar
+
+    # --- complexidade ---
+    - gocyclo
+    - nestif
+    - funlen
+    - dupl
+
+    # --- testes ---
+    - thelper # helpers sem t.Helper()
+    - usetesting # t.TempDir/t.Setenv/t.Context em vez de os/context
+
+  exclusions:
+    generated: lax
+    presets:
+      - std-error-handling # ex.: não exigir checagem de erro em fmt.Println / Close em defer
+    rules:
+      # Testes e o exemplo em cmd/ podem ser mais longos e repetitivos.
+      - path: (_test\.go|/cmd/)
+        linters:
+          - funlen
+          - dupl
+          - goconst
+          - forcetypeassert
+          - errcheck
+    paths:
+      - vendor$
+      - third_party$
+
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment # otimização de memória; muito ruidoso para ganho baixo
+      settings:
+        shadow:
+          strict: false
+    errcheck:
+      check-type-assertions: true
+      check-blank: false
+    exhaustive:
+      default-signifies-exhaustive: true
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+        - style
+      disabled-checks:
+        - whyNoLint # já coberto por nolintlint
+        - unnamedResult
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: errorf
+        - name: exported
+        - name: increment-decrement
+        - name: var-naming
+        - name: package-comments
+        - name: range
+        - name: receiver-naming
+        - name: indent-error-flow
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+        - name: unused-parameter
+        - name: unconditional-recursion
+        - name: identical-branches
+        - name: defer
+        - name: datarace
+        - name: modifies-value-receiver
+        - name: unhandled-error
+          arguments:
+            - "fmt.Print.*"
+    gosec:
+      excludes:
+        - G104 # duplicado com errcheck
+    funlen:
+      lines: 80
+      statements: 50
+    gocyclo:
+      min-complexity: 15
+    nestif:
+      min-complexity: 4
+    dupl:
+      threshold: 100
+    sloglint:
+      kv-only: false
+      attr-only: false
+      no-global: ""
+      context: ""
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/jeffersonbrasilino/ddgo
+  exclusions:
+    generated: lax
